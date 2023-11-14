@@ -1,8 +1,8 @@
 import serial
 from libs.mqtt import mqtt_eiei 
 # Define the serial port and baud rate
-serial_port = '/dev/cu.usbserial-539E0035171'  # Change this to your 
-baud_rate = 9600  # Set the baud rate used by your ESP32
+serial_port = '/dev/cu.usbserial-0001'  # Change this to your 
+baud_rate = 115200  # Set the baud rate used by your ESP32
 
 # Initialize the serial connection
 ser = serial.Serial(serial_port, baud_rate)
@@ -14,24 +14,14 @@ def init_read_serial():
 
 def read_serial():
         try:
-            # Read a line from the serial port
+
             line = ser.readline().decode().strip()
-            # Process the received data
+    
             print("Received: ", line)
-            mqtt_eiei.publish("/c16d/topic/serial",line)
+            mqtt_eiei.client.publish("usb2ttl/msg", line)
+         
         except KeyboardInterrupt:
             # Close the serial port when the program is interrupted
             ser.close()
             print("Serial port closed.")
-# try:
-#     # while True:
-#     #     # Read a line from the serial port
-#     #     line = ser.readline().decode().strip()
-#     #     # Process the received data
-#     #     print("Received: ", line)
-
-# except KeyboardInterrupt:
-#     # Close the serial port when the program is interrupted
-#     ser.close()
-#     print("Serial port closed.")
 
