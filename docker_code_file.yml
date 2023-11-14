@@ -1,0 +1,55 @@
+version: "3.7"
+services:
+  # MQTT broker - eclipse-mosquitto
+  mqtt5:
+    image: eclipse-mosquitto
+    container_name: mqtt5
+    ports:
+      - "1883:1883" # Default MQTT port
+      - "9001:9001" # Default MQTT port for WebSockets
+    volumes:
+      - ./config:/mosquitto/config:rw
+      - ./data:/mosquitto/data:rw
+      - ./log:/mosquitto/log:rw
+    networks:
+      - mqtt5-network
+
+  # Node-RED to connect to MQTT
+  mynodered:
+    image: nodered/node-red
+    container_name: mynodered
+    ports:
+      - "1880:1880" # Default Node-RED port
+    networks:
+      - mqtt5-network
+    environment:
+      - TZ=Asia/Bangkok # Set your desired timezone
+    depends_on:
+      - mqtt5
+
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt
+    container_name: zigbee2mqtt
+    ports:
+      - "8080:8080" # Default Zigbee2MQTT web interface port
+    volumes:
+      - ./zigbee2mqtt/data:/app/data
+    devices:
+      - /dev/ttyACM0 # Adjust the device path as needed
+    environment:
+      - TZ=Asia/Bangkok # Set your desired timezone
+      - MQTT_USERNAME=xday # Replace with your desired username
+      - MQTT_PASSWORD=passwd # Replace with your desired password
+    networks:
+      - mqtt5-network
+    depends_on:
+      - mqtt5
+# Volumes for mapping data, config, and log
+volumes:
+  config:
+  data:
+  log:
+
+networks:
+  mqtt5-network:
+    name: mqtt5-network
