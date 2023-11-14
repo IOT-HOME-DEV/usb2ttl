@@ -9,5 +9,6 @@ def install_prereqs():
 	print("Installing paho-mqtt pyserial...")
 	print()
 	os.system('pip3 install paho-mqtt; pip3 install pyserial')
-	
 	os.system('clear')
+
+install_prereqs()
