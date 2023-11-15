@@ -18,13 +18,11 @@ client = mqtt_client.Client(client_id)
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
         print("Connected to broker")
+        
         if rc == 0:
             print("Connected to MQTT Broker!")
-            check_connect=0
         else:
             print("Failed to connect, return code %d\n", rc)
-
-
     # client = mqtt_client.Client(client_id)
     client.username_pw_set(username, password)
     client.on_connect = on_connect
