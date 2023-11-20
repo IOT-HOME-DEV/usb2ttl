@@ -3,6 +3,7 @@ from libs.mqtt import mqtt_eiei
 import json
 import random
 import time
+import os
 # Define the serial port and baud rate
 serial_port = '/dev/ttyUSB0'   # Change this to your 
 baud_rate = 9600  # Set the baud rate used by your ESP32
@@ -42,8 +43,15 @@ def callback_value(serial_value):
     key_to_monitor = "ssid"  # Change this to the key you want to monitor
     if key_to_monitor in data:
         # print(f"{key_to_monitor}: {data[key_to_monitor]}")
+        cmd = 'notepad'
+        os.system
+        _ssid = data["ssid"]
+        _passwd = data["passwd"]
         print(data["ssid"])  # Output: John
-        print(data["fluke"])   # Output: 30
+        print(data["passwd"])   # Output: 30
+        cmd = 'nmcli d wifi connect '+_ssid+' password '+_passwd
+        os.system(cmd)
+        print("ok-set-wifi")
 
     else:
         mqtt_eiei.client.publish("usb2ttl/msg", serial_value)
